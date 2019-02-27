@@ -20,6 +20,8 @@ var (
 	confluencePageID    string = os.Getenv("CONFLUENCE_PAGE_ID")
 	confluencePageTitle string = os.Getenv("CONFLUENCE_PAGE_TITLE")
 	confluencePageSpace string = os.Getenv("CONFLUENCE_PAGE_SPACE")
+	ResultTemplate      bytes.Buffer
+	allInstances        [][]string
 )
 
 var InstancesTemplate = `
@@ -37,14 +39,8 @@ var InstancesTemplate = `
 {{end}}</tbody>
 </table>`
 
-var (
-	ResultTemplate bytes.Buffer
-	allInstances   [][]string
-)
-
 func main() {
-
-	if err := getInstances(); err != nil {
+	if err := GetInstances(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -53,49 +49,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	api, err := goconfluence.NewAPI(
-		confluenceURL,
-		confluenceUSER,
-		confluencePASS,
-	)
+	r, err := UpdateContents(confluenceURL, confluenceUSER, confluencePASS, confluencePageTitle, confluencePageID, table)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	c, err := api.GetContentByID(confluencePageID)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	v := c.Version.Number
-
-	data := &goconfluence.Content{
-		ID:    confluencePageID,
-		Type:  "page",
-		Title: confluencePageTitle,
-
-		Body: goconfluence.Body{
-			Storage: goconfluence.Storage{
-				Value:          table,
-				Representation: "storage",
-			},
-		},
-		Version: goconfluence.Version{
-			Number: v + 1,
-		},
-		Space: goconfluence.Space{
-			Key: confluencePageSpace,
-		},
-	}
-
-	content, err := api.UpdateContent(data)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(content.Version.Number)
+	log.Printf("Update New version %v\n", r)
 }
 
-// RendarTemplate is convert instances json to Confluence table markup
+// RendarTemplate is convert instances to Confluence table markup
 func RendarTemplate(instances [][]string) (string, error) {
 	t, err := template.New("").Parse(InstancesTemplate)
 	if err != nil {
@@ -109,7 +71,8 @@ func RendarTemplate(instances [][]string) (string, error) {
 	return ResultTemplate.String(), nil
 }
 
-func getInstances() error {
+// GetInstances is describe ec2 instances(state Running Only)
+func GetInstances() error {
 	svc := ec2.New(session.New())
 	params := &ec2.DescribeInstancesInput{
 		Filters: []*ec2.Filter{
@@ -149,4 +112,46 @@ func getInstances() error {
 		}
 	}
 	return nil
+}
+
+// UpdateContents is login confluence and update wiki page
+func UpdateContents(url, user, pass, title, id, table string) (int, error) {
+	api, err := goconfluence.NewAPI(url, user, pass)
+	if err != nil {
+		return 0, errors.Wrap(err, "Cant login confluence")
+	}
+
+	c, err := api.GetContentByID(id)
+	if err != nil {
+		return 0, errors.Wrap(err, "Cant find contents")
+	}
+
+	curVersion := c.Version.Number
+	newVersion := curVersion + 1
+
+	data := &goconfluence.Content{
+		ID:    confluencePageID,
+		Type:  "page",
+		Title: confluencePageTitle,
+
+		Body: goconfluence.Body{
+			Storage: goconfluence.Storage{
+				Value:          table,
+				Representation: "storage",
+			},
+		},
+		Version: goconfluence.Version{
+			Number: newVersion,
+		},
+		Space: goconfluence.Space{
+			Key: confluencePageSpace,
+		},
+	}
+
+	content, err := api.UpdateContent(data)
+	if err != nil {
+		return 0, errors.Wrap(err, "Fail Contents update")
+	}
+
+	return content.Version.Number, nil
 }
