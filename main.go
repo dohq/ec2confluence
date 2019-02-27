@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"os"
 	"text/template"
@@ -136,7 +135,7 @@ func getInstances() error {
 				}
 			}
 			if i.PublicIpAddress == nil {
-				i.PublicIpAddress = aws.String("Not Assigned")
+				i.PublicIpAddress = aws.String("-")
 			}
 			instance := []string{
 				Name,
