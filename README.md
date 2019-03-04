@@ -9,7 +9,7 @@ Update AWS EC2 runnning Instances list for Confluence.
 | CONFLUENCE_URL | https://<<confluenceurl>>/rest/api |
 | CONFLUENCE_USER | username |
 | CONFLUENCE_PASS | password |
-| CONFLUENCE_PAGE_ID | viewpage.action?pageId=<pageid> |
+| CONFLUENCE_PAGE_ID | viewpage.action?pageId="<pageid>" |
 | CONFLUENCE_PAGE_SPACE | space name |
 | CONFLUENCE_PAGE_TITLE | page title |
 | AWS_ACCESS_KEY | aws_access_key |
