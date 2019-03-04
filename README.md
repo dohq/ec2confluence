@@ -1,6 +1,6 @@
 # ec2confluence
 
-Update AWS EC2 runnning Instances list for Confluence.
+Update AWS EC2 and LB list for Confluence.
 
 ## Usage
 
