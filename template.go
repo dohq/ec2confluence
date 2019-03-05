@@ -24,7 +24,6 @@ var LoadBalancerTemplate = `
 <tbody>
 <tr>
 <th>LoadBalancerName</th>
-<th>Instances</th>
 </tr>
 {{range .}}<tr>{{range .}}<td>{{.}}</td>{{end}}</tr>
 {{end}}</tbody>
