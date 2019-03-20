@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -28,22 +31,30 @@ func GetInstances() error {
 	for _, r := range res.Reservations {
 		for _, i := range r.Instances {
 			var Name string
+			var SecurityGroups []string
+
 			for _, t := range i.Tags {
-				switch *t.Key {
+				switch aws.StringValue(t.Key) {
 				case "Name":
-					Name = *t.Value
+					Name = aws.StringValue(t.Value)
 				}
 			}
 			if i.PublicIpAddress == nil {
 				i.PublicIpAddress = aws.String("-")
 			}
+
+			for _, s := range i.SecurityGroups {
+				SecurityGroups = append(SecurityGroups, aws.StringValue(s.GroupName))
+			}
+
 			instance := []string{
 				Name,
-				*i.InstanceId,
-				*i.InstanceType,
-				*i.PublicIpAddress,
-				*i.PrivateIpAddress,
-				*i.Placement.AvailabilityZone,
+				aws.StringValue(i.InstanceId),
+				aws.StringValue(i.InstanceType),
+				aws.StringValue(i.PublicIpAddress),
+				aws.StringValue(i.PrivateIpAddress),
+				aws.StringValue(i.Placement.AvailabilityZone),
+				strings.Join(SecurityGroups, " / "),
 			}
 			allInstances = append(allInstances, instance)
 		}
