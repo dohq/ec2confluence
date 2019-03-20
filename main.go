@@ -17,6 +17,7 @@ var (
 	ResultTemplate      bytes.Buffer
 	allInstances        [][]string
 	allLoadbalancers    [][]string
+	allSecurityGroups   [][]string
 )
 
 func main() {
@@ -41,6 +42,13 @@ func main() {
 		}
 		inventoryList = allLoadbalancers
 		useTemplate = LoadBalancerTemplate
+
+	case "sg":
+		if err := GetSecurityGroup(); err != nil {
+			log.Fatalf("SecurityGroup Error: %v", err)
+		}
+		inventoryList = allSecurityGroups
+		useTemplate = SecurityGroupTemplate
 
 	default:
 		log.Println("Please set t Args")
