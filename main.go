@@ -2,34 +2,33 @@ package main
 
 import (
 	"bytes"
-	"flag"
 	"log"
-	"os"
+
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (
-	confluenceURL       string = os.Getenv("CONFLUENCE_URL")
-	confluenceUSER      string = os.Getenv("CONFLUENCE_USER")
-	confluencePASS      string = os.Getenv("CONFLUENCE_PASS")
-	confluencePageID    string = os.Getenv("CONFLUENCE_PAGE_ID")
-	confluencePageTitle string = os.Getenv("CONFLUENCE_PAGE_TITLE")
-	confluencePageSpace string = os.Getenv("CONFLUENCE_PAGE_SPACE")
-	ResultTemplate      bytes.Buffer
-	allInstances        [][]string
-	allLoadbalancers    [][]string
-	allSecurityGroups   [][]string
+	loarBalancers     = kingpin.Command("lb", "Output LoadBalancers Info")
+	instances         = kingpin.Command("in", "Output Instances Info")
+	secrityGroups     = kingpin.Command("sg", "Output SecurityGroups Info")
+	URL               = kingpin.Flag("url", "Confluence URL").Envar("CONFLUENCE_URL").Short('u').Required().String()
+	USERNAME          = kingpin.Flag("username", "Confluence UserName").Envar("CONFLUENCE_USER").Short('n').Required().String()
+	PASSWORD          = kingpin.Flag("password", "Confluence Password").Envar("CONFLUENCE_PASSWORD").Short('p').Required().String()
+	PageID            = kingpin.Flag("id", "Confluence PageID").Envar("CONFLUENCE_PAGE_ID").Short('i').Required().String()
+	PageTitle         = kingpin.Flag("title", "Confluence PageTitle").Envar("CONFLUENCE_PAGE_TITLE").Short('t').Required().String()
+	PageSpace         = kingpin.Flag("space", "Confluence Space").Envar("CONFLUENCE_PAGE_SPACE").Short('s').Required().String()
+	ResultTemplate    bytes.Buffer
+	allInstances      [][]string
+	allLoadbalancers  [][]string
+	allSecurityGroups [][]string
 )
 
 func main() {
-	var target string
 	var inventoryList [][]string
 	var useTemplate string
 
-	flag.StringVar(&target, "t", "", "Export inventory target(ec2 or lb)")
-	flag.Parse()
-
-	switch target {
-	case "ec2":
+	switch kingpin.Parse() {
+	case "in":
 		if err := GetInstances(); err != nil {
 			log.Fatalf("Instances Error: %v", err)
 		}
@@ -49,18 +48,14 @@ func main() {
 		}
 		inventoryList = allSecurityGroups
 		useTemplate = SecurityGroupTemplate
-
-	default:
-		log.Println("Please set t Args")
-		os.Exit(1)
 	}
 
-	Table, err := RendarTemplate(inventoryList, useTemplate)
+	Contents, err := RendarTemplate(inventoryList, useTemplate)
 	if err != nil {
-		log.Fatalf("Template Error: %v", err)
+		log.Fatalf("Rendaring Template Error: %v", err)
 	}
 
-	r, err := UpdateContents(confluenceURL, confluenceUSER, confluencePASS, confluencePageTitle, confluencePageID, Table)
+	r, err := UpdateContents(*URL, *USERNAME, *PASSWORD, *PageTitle, *PageID, Contents)
 	if err != nil {
 		log.Fatalf("UpdateContents Error: %v", err)
 	}
