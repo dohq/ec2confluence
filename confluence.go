@@ -20,9 +20,9 @@ func UpdateContents(url, user, pass, title, id, table string) (int, error) {
 	newVersion := curVersion + 1
 
 	data := &goconfluence.Content{
-		ID:    confluencePageID,
+		ID:    *PageID,
 		Type:  "page",
-		Title: confluencePageTitle,
+		Title: *PageTitle,
 
 		Body: goconfluence.Body{
 			Storage: goconfluence.Storage{
@@ -34,7 +34,7 @@ func UpdateContents(url, user, pass, title, id, table string) (int, error) {
 			Number: newVersion,
 		},
 		Space: goconfluence.Space{
-			Key: confluencePageSpace,
+			Key: *PageSpace,
 		},
 	}
 
