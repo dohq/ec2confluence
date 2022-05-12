@@ -55,7 +55,7 @@ func main() {
 		log.Fatalf("Rendaring Template Error: %v", err)
 	}
 
-	r, err := UpdateContents(*URL, *USERNAME, *PASSWORD, *PageTitle, *PageID, Contents)
+	r, err := UpdateContents(*URL, *USERNAME, *PASSWORD, *PageTitle, *PageID, *PageSpace, Contents)
 	if err != nil {
 		log.Fatalf("UpdateContents Error: %v", err)
 	}

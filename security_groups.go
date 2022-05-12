@@ -30,7 +30,7 @@ func GetSecurityGroup() error {
 
 	for _, e := range res.SecurityGroups {
 		var Rule []string
-		var IpRanges string
+		var IPRanges string
 		var Protocol string
 		var Port string
 
@@ -55,9 +55,9 @@ func GetSecurityGroup() error {
 				Port = "<strong>Port:</strong> " + Port
 			}
 
-			IpRanges = "<strong>AllowFrom:</strong> <br />" + strings.Join(Ranges, "<br />")
+			IPRanges = "<strong>AllowFrom:</strong> <br />" + strings.Join(Ranges, "<br />")
 
-			Rule = append(Rule, Protocol, Port, IpRanges, "<br />---")
+			Rule = append(Rule, Protocol, Port, IPRanges, "<br />---")
 		}
 
 		// skip default rule

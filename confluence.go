@@ -1,17 +1,17 @@
 package main
 
 import (
-	goconfluence "github.com/cseeger-epages/confluence-go-api"
+	goconfluence "github.com/virtomize/confluence-go-api"
 )
 
 // UpdateContents is login confluence and update wiki page
-func UpdateContents(url, user, pass, title, id, table string) (int, error) {
+func UpdateContents(url, user, pass, title, id, space, table string) (int, error) {
 	api, err := goconfluence.NewAPI(url, user, pass)
 	if err != nil {
 		return 0, err
 	}
 
-	c, err := api.GetContentByID(id)
+	c, err := api.GetContentByID(id, goconfluence.ContentQuery{})
 	if err != nil {
 		return 0, err
 	}
@@ -20,9 +20,9 @@ func UpdateContents(url, user, pass, title, id, table string) (int, error) {
 	newVersion := curVersion + 1
 
 	data := &goconfluence.Content{
-		ID:    *PageID,
+		ID:    id,
 		Type:  "page",
-		Title: *PageTitle,
+		Title: title,
 
 		Body: goconfluence.Body{
 			Storage: goconfluence.Storage{
@@ -30,11 +30,11 @@ func UpdateContents(url, user, pass, title, id, table string) (int, error) {
 				Representation: "storage",
 			},
 		},
-		Version: goconfluence.Version{
+		Version: &goconfluence.Version{
 			Number: newVersion,
 		},
 		Space: goconfluence.Space{
-			Key: *PageSpace,
+			Key: space,
 		},
 	}
 

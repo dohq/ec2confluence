@@ -1,14 +1,13 @@
 # ec2confluence
-
-Update AWS EC2 and LB list for Confluence.
+A tool to post a list of AWS EC2, Security Groups, and Loadbalancers to confluence
 
 ## Usage
 
 | Environment | Value |
 | ----------- | ----- |
-| CONFLUENCE_URL | https://<<confluenceurl>>/rest/api |
-| CONFLUENCE_USER | username |
-| CONFLUENCE_PASS | password |
+| CONFLUENCE_URL | https://<<confluenceId>>.atlassian.net/rest/api |
+| CONFLUENCE_USER | email address |
+| CONFLUENCE_PASS | api token |
 | CONFLUENCE_PAGE_ID | viewpage.action?pageId="<pageid>" |
 | CONFLUENCE_PAGE_SPACE | space name |
 | CONFLUENCE_PAGE_TITLE | page title |
