@@ -33,7 +33,7 @@ func UpdateContents(url, user, pass, title, id, space, table string) (int, error
 		Version: &goconfluence.Version{
 			Number: newVersion,
 		},
-		Space: goconfluence.Space{
+		Space: &goconfluence.Space{
 			Key: space,
 		},
 	}
