@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.3.2
-	github.com/aws/aws-sdk-go v1.44.297
+	github.com/aws/aws-sdk-go v1.44.298
 	github.com/virtomize/confluence-go-api v1.4.5
 )
 
