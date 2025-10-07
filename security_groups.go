@@ -22,7 +22,12 @@ var SecurityGroupTemplate = `
 </table>`
 
 func GetSecurityGroup() error {
-	svc := ec2.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		return err
+	}
+
+	svc := ec2.New(sess)
 	res, err := svc.DescribeSecurityGroups(nil)
 	if err != nil {
 		return err

@@ -10,7 +10,12 @@ import (
 
 // GetInstances is describe ec2 instances(state Running Only)
 func GetInstances() error {
-	svc := ec2.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		return err
+	}
+
+	svc := ec2.New(sess)
 	params := &ec2.DescribeInstancesInput{
 		Filters: []*ec2.Filter{
 			{

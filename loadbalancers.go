@@ -19,15 +19,20 @@ var LoadBalancerTemplate = `
 
 // GetLoadBalancers is describe lb instances(state Running Only)
 func GetLoadBalancers() error {
+	sess, err := session.NewSession()
+	if err != nil {
+		return err
+	}
+
 	// Classic LoadBalancer
-	clb := elb.New(session.New())
+	clb := elb.New(sess)
 	res, err := clb.DescribeLoadBalancers(nil)
 	if err != nil {
 		return err
 	}
 
 	// Application and Network LoadBalancer
-	alb := elbv2.New(session.New())
+	alb := elbv2.New(sess)
 	resv2, err := alb.DescribeLoadBalancers(nil)
 	if err != nil {
 		return err
