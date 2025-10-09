@@ -97,6 +97,8 @@ github.com/virtomize/confluence-go-api v1.4.5 h1:n3RsZkCwpMq6+opPEgXDrKCn+XZsaY4
 github.com/virtomize/confluence-go-api v1.4.5/go.mod h1:a96WPcok5g+7l5LC/ztcrp4cLmrIA1DHxxZSv/iqvsQ=
 github.com/virtomize/confluence-go-api v1.4.6 h1:yN1khm2tU0aFc7N7x58QQ+668rko77qIMIhs2f+qEO8=
 github.com/virtomize/confluence-go-api v1.4.6/go.mod h1:a96WPcok5g+7l5LC/ztcrp4cLmrIA1DHxxZSv/iqvsQ=
+github.com/virtomize/confluence-go-api v1.5.1 h1:/xgL/XFB0rcTp8xWw41wpWYTQ50X4BBx05jy+ZlB25A=
+github.com/virtomize/confluence-go-api v1.5.1/go.mod h1:a96WPcok5g+7l5LC/ztcrp4cLmrIA1DHxxZSv/iqvsQ=
 github.com/xhit/go-str2duration/v2 v2.1.0 h1:lxklc02Drh6ynqX+DdPyp5pCKLUQpRT8bp8Ydu2Bstc=
 github.com/xhit/go-str2duration/v2 v2.1.0/go.mod h1:ohY8p+0f07DiV6Em5LKB0s2YpLtXVyJfNt1+BlmyAsU=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
